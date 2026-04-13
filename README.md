@@ -41,6 +41,49 @@ Workflow :
 
 - `EXPO_TOKEN` : token Expo personnel (Programmatic Access)
 
+### Configuration exacte pour corriger l'erreur CI Expo
+
+Si tu vois cette erreur dans GitHub Actions :
+
+```txt
+An Expo user account is required to proceed.
+Either log in with eas login or set the EXPO_TOKEN environment variable
+```
+
+alors le runner n'a pas reçu un token Expo valide.
+
+#### 1) Générer un token Expo (Programmatic Access)
+
+1. Va sur Expo (compte qui possède le projet EAS)
+2. Ouvre les paramètres de compte
+3. Crée un **Programmatic Access Token**
+4. Copie la valeur du token
+
+#### 2) Ajouter le secret dans GitHub
+
+Dans ton dépôt GitHub :
+
+1. `Settings`
+2. `Secrets and variables` → `Actions`
+3. `New repository secret`
+4. Name: `EXPO_TOKEN`
+5. Value: colle ton token Expo
+
+#### 3) Vérifier que le workflow lit bien le secret
+
+Le workflow `.github/workflows/eas-build.yml` :
+
+- injecte `EXPO_TOKEN` au niveau du job
+- vérifie explicitement que la variable n'est pas vide
+- exécute `eas whoami` avant le build
+
+Si `eas whoami` échoue, le token est absent/expiré ou ne correspond pas au bon compte Expo.
+
+#### 4) Cas classique : fork / secrets non disponibles
+
+Si tu pousses depuis un fork ou un autre dépôt, vérifie que **ce dépôt précis** contient bien `EXPO_TOKEN`.
+Les secrets ne sont pas partagés automatiquement entre repos.
+
 ## À propos du message "Les fichiers binaires ne sont pas pris en charge"
 
 Pour éviter les blocages lors de la création de PR dans des environnements qui refusent les binaires :
