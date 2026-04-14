@@ -1,6 +1,7 @@
-import { StatusBar } from 'expo-status-bar';
 import Constants from 'expo-constants';
+import { isGlassEffectAPIAvailable, isLiquidGlassAvailable } from 'expo-glass-effect';
 import { LinearGradient } from 'expo-linear-gradient';
+import { StatusBar } from 'expo-status-bar';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -18,9 +19,9 @@ export default function HomeScreen() {
 
   return (
     <LinearGradient
-      colors={['#071226', '#0C2446', '#1A4B73']}
-      start={{ x: 0.05, y: 0.05 }}
-      end={{ x: 0.95, y: 0.95 }}
+      colors={APP_CONFIG.ui.gradients.background}
+      start={APP_CONFIG.ui.gradients.start}
+      end={APP_CONFIG.ui.gradients.end}
       style={styles.screen}
     >
       <SafeAreaView style={styles.safeArea}>
@@ -42,6 +43,8 @@ export default function HomeScreen() {
             <Text style={styles.metaText}>iOS profile: {APP_CONFIG.buildInfo.iosProfile}</Text>
             <Text style={styles.metaText}>Android profile: {APP_CONFIG.buildInfo.androidProfile}</Text>
             <Text style={styles.metaText}>Runtime version: {runtimeVersion}</Text>
+            <Text style={styles.metaText}>Liquid Glass components: {isLiquidGlassAvailable() ? 'yes' : 'no'}</Text>
+            <Text style={styles.metaText}>Liquid Glass API runtime: {isGlassEffectAPIAvailable() ? 'yes' : 'no'}</Text>
           </View>
         </ScrollView>
       </SafeAreaView>
